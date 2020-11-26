@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MasterDetailApp</string>
+    <string name="app_name">Master-Detail App</string>
+    <string name="display_price">$%,.2f</string>
 </resources>
