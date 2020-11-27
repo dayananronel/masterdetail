@@ -43,6 +43,7 @@ class MainFragment : Fragment() {
                 container,false)
 
 
+
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -75,6 +76,9 @@ class MainFragment : Fragment() {
             viewModel.isNetworkAvailable.value = it
         })
         viewModel.isNetworkAvailable.value = requireContext().isConnected
+
+        //on first load
+        viewModel.getITunesMediaFromRepository()
 
         return binding.root
 
