@@ -10,12 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ronel.masterdetail.R
 import com.ronel.masterdetail.adapter.MoviesAdapter
 import com.ronel.masterdetail.bean.ITunes
 import com.ronel.masterdetail.databinding.FragmentMainBinding
+import com.ronel.masterdetail.utils.ConnectionLiveData
+import com.ronel.masterdetail.utils.isConnected
 
 class MainFragment : Fragment() {
 
@@ -30,6 +31,9 @@ class MainFragment : Fragment() {
     //Adapter
     private var viewModelAdapter: MoviesAdapter? = null
 
+    //network validation
+    private lateinit var connectionLiveData: ConnectionLiveData
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -42,6 +46,9 @@ class MainFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        //instantiate network receiver
+        connectionLiveData  = ConnectionLiveData(requireContext())
+
         viewModelAdapter  = MoviesAdapter(MoviesClick {
             this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
         })
@@ -51,25 +58,28 @@ class MainFragment : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener{
-            viewModel.getITunesMediaFromRepository()
+            viewModel.getITunesMediaFromRepository().apply {
+                viewModel.isNetworkAvailable.observe(viewLifecycleOwner, Observer {
+                    when(it){
+                        false -> {
+                            Toast.makeText(context,"No Internet Connection", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
         }
 
-        // Observer for the network error.
-        viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer<Boolean> { isNetworkError ->
-            if (isNetworkError) onNetworkError()
-        })
 
+        //observe network receiver
+        connectionLiveData.observe(this, Observer {
+            viewModel.isNetworkAvailable.value = it
+        })
+        viewModel.isNetworkAvailable.value = requireContext().isConnected
 
         return binding.root
 
     }
 
-    private fun onNetworkError() {
-        if(!viewModel.isNetworkErrorShown.value!!) {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show()
-            viewModel.onNetworkErrorShown()
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,9 +92,9 @@ class MainFragment : Fragment() {
 
     class MoviesClick(val block: (ITunes) -> Unit) {
         /**
-         * Called when a route is clicked
+         * Called when a movie is clicked
          *
-         * @param route the route that was clicked
+         * @param movie the movie that was clicked
          */
         fun onClick(movie: ITunes) = block(movie)
     }

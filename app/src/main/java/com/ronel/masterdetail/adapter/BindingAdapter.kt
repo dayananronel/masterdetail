@@ -49,10 +49,7 @@ fun swipeRefreshData(swipeRefresh: SwipeRefreshLayout, status: ApiStatus?){
         ApiStatus.LOADING -> {
             swipeRefresh.isRefreshing = true
         }
-        ApiStatus.ERROR -> {
-            swipeRefresh.isRefreshing = false
-        }
-        ApiStatus.DONE -> {
+        ApiStatus.DONE,ApiStatus.NOINTERNET, ApiStatus.ERROR -> {
             swipeRefresh.isRefreshing = false
         }
     }
