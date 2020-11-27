@@ -11,27 +11,38 @@
 
     </data>
 
-    <RelativeLayout android:layout_width="match_parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".main.MainFragment">
+        app:swipeRefreshData="@{viewModel.status}">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/movie_list"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            listData="@{viewModel.movies}"
-            app:spanCount="2"
-            tools:listitem="@layout/list_item"
-            />
+            tools:context=".main.MainFragment">
 
-        <ImageView
-            android:id="@+id/imgStatus"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            app:apiStatus="@{viewModel.status}" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/movie_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/list_item"
 
-    </RelativeLayout>
+                />
+
+            <ImageView
+                android:id="@+id/imgStatus"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                app:apiStatus="@{viewModel.status}" />
+
+        </RelativeLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </layout>

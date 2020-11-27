@@ -4,6 +4,12 @@
         <variable
             name="movie"
             type="com.ronel.masterdetail.bean.ITunes" />
+
+        <variable
+            name="moviesCallback"
+            type="com.ronel.masterdetail.main.MainFragment.MoviesClick" />
+
+
     </data>
 
 
@@ -20,6 +26,7 @@
             android:layout_margin="5dp"
             android:elevation="@dimen/cardview_default_elevation"
             app:cardCornerRadius="@dimen/cardview_default_radius"
+            android:onClick="@{() -> moviesCallback.onClick(movie)}"
             >
 
             <LinearLayout

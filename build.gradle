@@ -6,7 +6,7 @@ buildscript {
         // navigation where the versions of the plugin needs to be the same as the version of the
         // library defined in the app Gradle file
         version_android_gradle_plugin = '4.0.1'
-        version_glide = "4.8.0"
+        version_glide = "4.11.0"
         version_lifecycle = "2.2.0"
         version_moshi = "1.8.0"
         version_navigation = "1.0.0"
